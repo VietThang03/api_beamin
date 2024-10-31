@@ -95,7 +95,7 @@ export class AuthService {
     const existingEmail = await this.prismaClient.users.findUnique({
       where: { email: data.email },
     });
-    if (!existingEmail) {
+    if (existingEmail) {
       throw new UnauthorizedException('Email already in system!');
     }
     const newPassword = this.usersService.hashPassword(data.password)

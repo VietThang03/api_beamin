@@ -22,8 +22,8 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(LocalAuthGuard)
-  @Post('')
+  //@UseGuards(LocalAuthGuard)
+  @Post('/register')
   create(@Body() registerUserDto: RegisterUserDto, @Res({passthrough: true}) res) {
     return this.authService.register(registerUserDto, res);
   }
