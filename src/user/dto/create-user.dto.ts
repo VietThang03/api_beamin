@@ -1,17 +1,24 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
-    @IsOptional()
     @IsEmail()
+    @IsNotEmpty({
+        message:"Email không được để trống!!!"
+    })
     email: string;
   
-    @IsOptional()
-    @IsString()
+   
     @MinLength(6)
+    @MaxLength(50)
+    @IsNotEmpty({
+        message:"Password không được để trống!!!"
+    })
     password: string;
   
-    @IsOptional()
     @IsString()
+    @IsNotEmpty({
+        message: "Name không được để trống!!!"
+    })
     username: string;
 }
 

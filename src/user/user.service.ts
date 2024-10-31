@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,10 +10,7 @@ import { compareSync, genSaltSync, hashSync, hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
-
-  constructor(
-    private prismaClient : PrismaService
-  ){}
+  constructor(private prismaClient: PrismaService) {}
 
   hashPassword = (password: string) => {
     const salt = genSaltSync(10);
@@ -17,8 +18,26 @@ export class UserService {
     return hash;
   };
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const isExist = await this.prismaClient.users.findUnique({
+      where: { email: createUserDto.email },
+    });
+    if (isExist) {
+      throw new BadRequestException(
+        `Email ${createUserDto.email} already existed!!!`,
+      );
+    }
+    const hashPassword = this.hashPassword(createUserDto.password)
+    const newUser = await this.prismaClient.users.create({
+      data:{
+        ...createUserDto,
+        password: hashPassword
+      }
+    })
+    return {
+      message: 'Create new user successfully',
+      data: newUser
+    };
   }
 
   findAll() {
@@ -27,66 +46,66 @@ export class UserService {
 
   async findOne(id: number) {
     const user = await this.prismaClient.users.findUnique({
-      where: {id},
-      select:{
+      where: { id },
+      select: {
         id: true,
         email: true,
-        username: true
-      }
-    })
-    if(!user){
+        username: true,
+      },
+    });
+    if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     return {
       message: 'Find user successfully',
-      user: user
-    }
+      user: user,
+    };
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    await this.findOne(id) 
-    const data: any = {...updateUserDto}
-    if(updateUserDto.password){
-      data.password = await hash(updateUserDto.password, 10)
+    await this.findOne(id);
+    const data: any = { ...updateUserDto };
+    if (updateUserDto.password) {
+      data.password = await hash(updateUserDto.password, 10);
     }
     const updateUser = await this.prismaClient.users.update({
-      where: {id},
+      where: { id },
       data,
-      select:{
+      select: {
         id: true,
         email: true,
-        username: true
-      }
-    })
+        username: true,
+      },
+    });
     return {
       message: 'Update successfully!',
-      user: updateUser
-    }
+      user: updateUser,
+    };
   }
 
   async remove(id: number) {
     await this.findOne(id);
     await this.prismaClient.users.delete({
-      where: {id}
-    })
+      where: { id },
+    });
     return {
       message: 'Delete user successfully',
-    }
+    };
   }
 
-  async findOneUserByUsername(username: string){
+  async findOneUserByUsername(username: string) {
     return await this.prismaClient.users.findUnique({
-      where:{username: username},
-      select:{
+      where: { username: username },
+      select: {
         id: true,
         email: true,
         username: true,
-        password: true
-      }
-    })
+        password: true,
+      },
+    });
   }
 
-  isValidPassword(password: string, hash: string){
+  isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);
   }
 }

@@ -53,13 +53,13 @@ export class AuthService {
     const user = await this.usersService.findOneUserByUsername(username);
     if (user) {
       const isValid = this.usersService.isValidPassword(pass, user.password);
-      console.log(isValid)
       if (isValid === true) {
         // const objUser = {
         //   ...user,
         // };
         return user;
       }
+      //return user
     }
     return null;
   }
