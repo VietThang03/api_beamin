@@ -32,7 +32,7 @@ export class OrdersService {
       data:{
         user_id: user_id,
         status: 'pending',
-        total_price: totalPrice,
+        total_price: Number(totalPrice),
         created_at: new Date(),
         order_items:{
           create: orderItems.map((item) => ({
