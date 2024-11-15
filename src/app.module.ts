@@ -10,11 +10,12 @@ import { FilesModule } from './files/files.module';
 import { FoodsModule } from './foods/foods.module';
 import { FoodCategoriesModule } from './food-categories/food-categories.module';
 import { OrdersModule } from './orders/orders.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [UserModule, PrismaModule,  ConfigModule.forRoot({
     isGlobal: true
-  }), AuthModule, FilesModule, FoodsModule, FoodCategoriesModule, OrdersModule],
+  }), AuthModule, FilesModule, FoodsModule, FoodCategoriesModule, OrdersModule, SearchModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

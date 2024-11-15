@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { FoodCategoriesService } from './food-categories.service';
 import { CreateFoodCategoryDto } from './dto/create-food-category.dto';
 import { UpdateFoodCategoryDto } from './dto/update-food-category.dto';
@@ -13,20 +22,25 @@ export class FoodCategoriesController {
     return this.foodCategoriesService.create(createFoodCategoryDto);
   }
 
-  @Public()
   @Get()
-  findAll(@Query("page") page: string, @Query("limit") limit: string, @Query("name") name: string) {
+  findAll(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('name') name: string,
+  ) {
     return this.foodCategoriesService.findAll(+page, +limit, name);
   }
 
-  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.foodCategoriesService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFoodCategoryDto: UpdateFoodCategoryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateFoodCategoryDto: UpdateFoodCategoryDto,
+  ) {
     return this.foodCategoriesService.update(+id, updateFoodCategoryDto);
   }
 

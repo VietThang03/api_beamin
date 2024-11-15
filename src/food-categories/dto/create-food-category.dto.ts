@@ -6,8 +6,5 @@ export class CreateFoodCategoryDto {
     })
     name: string
 
-    @IsNotEmpty({
-        message: "Name không được để trống!!!"
-    })
     description?: string
 }

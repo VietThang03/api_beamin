@@ -43,7 +43,7 @@ export class FoodsService {
   async findAll(page: number, limit: number, name: string) {
     const totalRecords = await this.prismaClient.foods.count();
     const totalPages = Math.ceil(totalRecords / limit);
-    const defaultLimit = limit ? limit : 10;
+    const defaultLimit = limit ? limit : 20;
     const defaultPage = page ? page : 1;
     
     const foods = await this.prismaClient.foods.findMany({
@@ -72,7 +72,14 @@ export class FoodsService {
 
   async findOne(id: number) {
     const food = await this.prismaClient.foods.findUnique({
-      where: {id}
+      where: {id},
+      include:{
+        food_categories: {
+          select:{
+            name: true
+          }
+        }
+      }
     })
     if(!food){
       throw new NotFoundException(`Food with ID ${id} not found`);

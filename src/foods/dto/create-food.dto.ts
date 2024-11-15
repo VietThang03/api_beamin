@@ -29,4 +29,6 @@ export class CreateFoodDto {
     })
     @IsNumber()
     category_id: number
+
+    image_url?: string
 }

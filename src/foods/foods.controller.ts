@@ -4,7 +4,7 @@ import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { Public } from 'src/decorator/customize';
 
-@Controller('foods')
+@Controller('/api/v1/foods')
 export class FoodsController {
   constructor(private readonly foodsService: FoodsService) {}
 

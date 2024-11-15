@@ -80,14 +80,19 @@ export class AuthService {
       // maxAge: ms(this.configService.get<string>("JWT_REFRESH_TOKEN_EXPIRE"))
       maxAge: 604800000,
     });
+    const userLogin = await this.prismaClient.users.findUnique({
+      where: {id: id},
+      select:{
+        id: true,
+        email: true,
+        username: true,
+        avatar: true
+      }
+    })
     return {
       message: 'Login successfully',
       access_token: this.createAccesstoken(String(id), username, email),
-      user: {
-        id,
-        email,
-        username,
-      },
+      user: userLogin
     };
   }
 
@@ -115,6 +120,7 @@ export class AuthService {
     const result = await this.prismaClient.users.findUnique({
       where: {id: newUser.id},
       select:{
+        id: true,
         username: true,
         email: true ,
         avatar: true
@@ -145,7 +151,7 @@ export class AuthService {
   async logout(user: User, response: Response) {
     const { id } = user;
     await this.prismaClient.refresh_tokens.update({
-      where: { id },
+      where: { id: Number(id)},
       data: {
         token: '',
       },

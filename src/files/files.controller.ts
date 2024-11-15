@@ -5,7 +5,7 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { Public } from 'src/decorator/customize';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('files')
+@Controller('/api/v1/files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 

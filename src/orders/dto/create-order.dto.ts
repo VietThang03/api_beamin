@@ -25,10 +25,6 @@ class OrderItemDto {
 }
 
 export class CreateOrderDto {
-  @IsInt()
-  @IsNotEmpty()
-  user_id: number;
-
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItemDto)

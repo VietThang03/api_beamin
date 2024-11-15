@@ -30,6 +30,7 @@ export class AuthController {
 
   @Post('/logout')
   async handleLogout(@Req() req, @Res({passthrough: true}) response: Response){
+    console.log(req.user);
     return await this.authService.logout(req.user, response)
   }
 }

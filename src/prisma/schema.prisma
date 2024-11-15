@@ -10,7 +10,7 @@ datasource db {
 model food_categories {
   id          Int     @id @default(autoincrement())
   name        String  @db.VarChar(100)
-  description String?
+  description String? @default("")
   foods       foods[]
 }
 
@@ -38,7 +38,7 @@ model inventory {
 
 model order_items {
   id       Int     @id @default(autoincrement())
-  order_id Int?
+  order_id Int? @unique
   food_id  Int?
   quantity Int
   price    Decimal @db.Decimal(10, 2)

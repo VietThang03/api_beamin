@@ -40,8 +40,27 @@ export class UserService {
     };
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(page: number, limit: number, name: string) {
+    const totalRecords = await this.prismaClient.users.count();
+    const totalPages = Math.ceil(totalRecords / limit);
+    const defaultLimit = limit ? limit : 20;
+    const defaultPage = page ? page : 1;
+    
+    const users = await this.prismaClient.users.findMany({
+      where: name ? { username: { contains: name,  mode: 'insensitive' }} : {},
+      skip: (defaultPage - 1) * limit,
+      take: defaultLimit
+    });
+    return {
+      message: 'Get all users successfully!!!',
+      meta: {
+        current: page,
+        pageSize: limit,
+        pages: totalPages,
+        total: totalRecords,
+      },
+      data: users,
+    };
   }
 
   async findOne(id: number) {

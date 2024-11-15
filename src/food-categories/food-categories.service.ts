@@ -43,6 +43,30 @@ export class FoodCategoriesService {
     };
   }
 
+  async search(name: string, page: number, limit: number){
+    const totalRecords = await this.prismaClient.foods.count();
+    const totalPages = Math.ceil(totalRecords / limit);
+    const defaultLimit = limit ? limit : 10;
+    const defaultPage = page ? page : 1;
+
+    const foods = await this.prismaClient.foods.findMany({
+      where: {name: name},
+      skip: (defaultPage - 1) * limit,
+      take: defaultLimit,
+    });
+
+    return {
+      message: 'Search successfully!!!',
+      meta: {
+        current: page,
+        pageSize: limit,
+        pages: totalPages,
+        total: totalRecords,
+      },
+      data: foods,
+    };
+  }
+
   async findOne(id: number) {
     const exsistingFoodCategory =
       await this.prismaClient.food_categories.findUnique({
